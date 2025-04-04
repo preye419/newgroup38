@@ -1,28 +1,35 @@
 ---
-- name: Remove existing MongoDB 5.x repo if it exists
-  file:
-    path: /etc/yum.repos.d/mongodb-org-5.0.repo
-    state: absent
-  ignore_errors: yes
+- name: Deploy Node.js Application with MongoDB
+  hosts: app1
+  become: true
+  tasks:
+    - name: Add MongoDB 4.4 repository
+      copy:
+        dest: /etc/yum.repos.d/mongodb-org-4.4.repo
+        content: |
+          [mongodb-org-4.4]
+          name=MongoDB Repository
+          baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/4.4/x86_64/
+          gpgcheck=1
+          enabled=1
+          gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 
-- name: Add MongoDB 4.4 repo
-  yum_repository:
-    name: mongodb-org-4.4
-    description: MongoDB Repository
-    baseurl: https://repo.mongodb.org/yum/amazon/2/mongodb-org/4.4/x86_64/
-    gpgcheck: yes
-    enabled: yes
-    gpgkey: https://www.mongodb.org/static/pgp/server-4.4.asc
+    - name: Install MongoDB 4.4
+      yum:
+        name: mongodb-org
+        state: present
 
-- name: Install MongoDB 4.4
-  yum:
-    name: mongodb-org
-    state: present
+    - name: Start MongoDB service
+      systemd:
+        name: mongod
+        state: started
+        enabled: yes
 
-- name: Enable and start mongod
-  systemd:
-    name: mongod
-    state: started
-    enabled: yes
+    - name: Ensure MongoDB is running
+      systemd:
+        name: mongod
+        state: started
+        enabled: yes
+
 
 ...
