@@ -1,2 +1,5 @@
+---
 app_directory: /home/centos/devops-api
+repo_url: https://github.com/preye419/newgroup38.git
+app_port: 3000
 ...

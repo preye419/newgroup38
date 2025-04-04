@@ -4,9 +4,27 @@
     repo: "{{ repo_url }}"
     dest: "{{ app_directory }}"
     version: main
+    force: yes  # Ensures the repository is updated
+
+- name: Install Node.js if not installed
+  yum:
+    name: nodejs
+    state: present
+    become: yes
 
 - name: Install app dependencies
   npm:
     path: "{{ app_directory }}"
     state: present
+    production: yes
+    executable: /usr/bin/npm  # Optional: Specify the path to npm if not in the default location
+
+- name: Ensure the app is running
+  shell: |
+    cd {{ app_directory }}
+    nohup npm start &
+  args:
+    chdir: "{{ app_directory }}"
+    background: yes
+    creates: "{{ app_directory }}/node_modules"  # This prevents rerunning if node_modules already exist
 ...

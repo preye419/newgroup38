@@ -1,12 +1,24 @@
 ---
+- name: Add MongoDB repository
+  yum_repository:
+    name: mongodb-org-4.4
+    description: MongoDB 4.4 Repository
+    baseurl: https://repo.mongodb.org/yum/amazon/4.4/x86_64/
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://www.mongodb.org/static/pgp/server-4.4.asc
+    state: present
+
 - name: Install MongoDB
   yum:
     name: mongodb-org
     state: present
+    become: yes
 
 - name: Start MongoDB service
   systemd:
     name: mongod
     state: started
     enabled: yes
+    become: yes
 ...
