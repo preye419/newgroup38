@@ -3,4 +3,5 @@
   yum:
     name: nodejs
     state: present
+    become: yes
 ...
