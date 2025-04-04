@@ -4,11 +4,12 @@
   become: yes
   vars:
     app_directory: /home/centos/devops-api  # Define the directory to deploy the app
-    repo_url: https://github.com/preye419/GROUP38.git  # URL of your app's Git repo
-    app_port: 3000
+    repo_url: https://github.com/preye419/newgroup38.git  # URL of your app's Git repo
+    app_port: 3000  # Port on which the app will run
 
   roles:
     - install_nodejs
     - install_mongodb
     - deploy_app
     - configure_nginx
+...
