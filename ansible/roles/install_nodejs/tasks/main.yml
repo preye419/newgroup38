@@ -1,7 +1,11 @@
 ---
+- name: Add Node.js 16 repository
+  shell: curl -sL https://rpm.nodesource.com/setup_16.x | bash -
+  args:
+    creates: /etc/yum.repos.d/nodesource-nodejs16.repo
+
 - name: Install Node.js
   yum:
     name: nodejs
     state: present
-    become: yes
 ...
