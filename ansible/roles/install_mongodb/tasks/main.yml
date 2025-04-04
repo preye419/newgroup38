@@ -25,11 +25,4 @@
         state: started
         enabled: yes
 
-    - name: Ensure MongoDB is running
-      systemd:
-        name: mongod
-        state: started
-        enabled: yes
-
-
 ...
