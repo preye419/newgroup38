@@ -10,7 +10,12 @@
 
 - name: Install MongoDB 4.4
   yum:
-    name: mongodb-org
+    name:
+      - mongodb-org-4.4.25
+      - mongodb-org-server-4.4.25
+      - mongodb-org-shell-4.4.25
+      - mongodb-org-mongos-4.4.25
+      - mongodb-org-tools-4.4.25
     state: present
 
 - name: Enable and start mongod
