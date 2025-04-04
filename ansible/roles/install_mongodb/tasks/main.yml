@@ -1,4 +1,10 @@
 ---
+- name: Remove existing MongoDB repo if it exists
+  file:
+    path: /etc/yum.repos.d/mongodb-org-5.0.repo
+    state: absent
+  ignore_errors: yes
+
 - name: Add MongoDB 4.4 repo
   yum_repository:
     name: mongodb-org-4.4
@@ -10,12 +16,7 @@
 
 - name: Install MongoDB 4.4
   yum:
-    name:
-      - mongodb-org-4.4.25
-      - mongodb-org-server-4.4.25
-      - mongodb-org-shell-4.4.25
-      - mongodb-org-mongos-4.4.25
-      - mongodb-org-tools-4.4.25
+    name: mongodb-org-4.4.29
     state: present
 
 - name: Enable and start mongod
@@ -23,5 +24,4 @@
     name: mongod
     state: started
     enabled: yes
-
 ...
