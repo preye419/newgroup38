@@ -1,0 +1,12 @@
+---
+- name: Clone the application code
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ app_directory }}"
+    version: main
+
+- name: Install app dependencies
+  npm:
+    path: "{{ app_directory }}"
+    state: present
+...
