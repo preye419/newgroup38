@@ -3,18 +3,37 @@
   hosts: app1
   become: true
   tasks:
-    - name: Add MongoDB 4.4 repository
+    - name: Install OpenSSL 1.0.2 (if necessary for compatibility)
+      yum:
+        name: https://vault.centos.org/7.9.2009/updates/x86_64/Packages/openssl-1.0.2k-19.el7_9.1.x86_64.rpm
+        state: present
+
+    - name: Create symlinks for libcrypto.so.10 and libssl.so.10
+      file:
+        src: /usr/lib64/openssl-1.0.2k/libcrypto.so
+        dest: /usr/lib64/libcrypto.so.10
+        state: link
+      notify:
+        - Create libssl symlink
+
+    - name: Create symlink for libssl.so.10
+      file:
+        src: /usr/lib64/openssl-1.0.2k/libssl.so
+        dest: /usr/lib64/libssl.so.10
+        state: link
+
+    - name: Add MongoDB 4.2 repository
       copy:
-        dest: /etc/yum.repos.d/mongodb-org-4.4.repo
+        dest: /etc/yum.repos.d/mongodb-org-4.2.repo
         content: |
-          [mongodb-org-4.4]
+          [mongodb-org-4.2]
           name=MongoDB Repository
-          baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/4.4/x86_64/
+          baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/4.2/x86_64/
           gpgcheck=1
           enabled=1
-          gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
+          gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
 
-    - name: Install MongoDB 4.4
+    - name: Install MongoDB 4.2
       yum:
         name: mongodb-org
         state: present
@@ -24,5 +43,12 @@
         name: mongod
         state: started
         enabled: yes
+
+  handlers:
+    - name: Create libssl symlink
+      file:
+        src: /usr/lib64/openssl-1.0.2k/libssl.so
+        dest: /usr/lib64/libssl.so.10
+        state: link
 
 ...
