@@ -1,37 +1,40 @@
 
 ---
-- name: Install and configure MongoDB on app1
-  hosts: app1
-  become: yes
-  tasks:
+- name: Add MongoDB 4.4 repo for CentOS 7
+  copy:
+    dest: /etc/yum.repos.d/mongodb-org-4.4.repo
+    content: |
+      [mongodb-org-4.4]
+      name=MongoDB Repository
+      baseurl=https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.4/x86_64/
+      gpgcheck=1
+      enabled=1
+      gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 
-    - name: Install required dependencies for MongoDB
-      yum:
-        name:
-          - openssl10-libs
-          - libcrypto
-          - libssl
-        state: present
+- name: Clean YUM cache
+  command: yum clean all
+  args:
+    warn: false
 
-    - name: Add MongoDB 4.4 repo
-      copy:
-        dest: /etc/yum.repos.d/mongodb-org-4.4.repo
-        content: |
-          [mongodb-org-4.4]
-          name=MongoDB Repository
-          baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/4.4/x86_64/
-          gpgcheck=1
-          enabled=1
-          gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
+- name: Make sure metadata is up to date
+  command: yum makecache
+  args:
+    warn: false
 
-    - name: Install MongoDB
-      yum:
-        name: mongodb-org
-        state: present
+- name: Install specific version of MongoDB 4.4
+  yum:
+    name:
+      - mongodb-org-4.4.25
+      - mongodb-org-server-4.4.25
+      - mongodb-org-shell-4.4.25
+      - mongodb-org-mongos-4.4.25
+      - mongodb-org-tools-4.4.25
+    state: present
 
-    - name: Enable and start MongoDB
-      systemd:
-        name: mongod
-        state: started
-        enabled: yes
+- name: Enable and start MongoDB
+  systemd:
+    name: mongod
+    enabled: yes
+    state: started
+
 ...
