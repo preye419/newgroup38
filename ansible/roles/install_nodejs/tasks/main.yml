@@ -1,7 +1,7 @@
 ---
-- name: Add Node.js 18.x repo from NodeSource
+- name: Add Node.js 12.x repo from NodeSource
   get_url:
-    url: https://rpm.nodesource.com/setup_18.x
+    url: https://rpm.nodesource.com/setup_12.x
     dest: /tmp/nodesource_setup.sh
     mode: '0755'
 
@@ -20,4 +20,5 @@
 - name: Show Node.js version
   debug:
     msg: "Node.js version installed: {{ node_version.stdout }}"
+
 ...
