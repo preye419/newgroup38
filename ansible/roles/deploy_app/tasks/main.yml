@@ -1,5 +1,5 @@
 ---
-- name: Deploy Node.js App
+- name: Deploy Node.js App with Nginx Reverse Proxy
   hosts: app1
   become: yes
   vars:
@@ -8,12 +8,12 @@
     app_port: 3000  # Port on which the Node.js app will run
 
   tasks:
-    - name: Ensure the app directory exists
+    - name: Create app directory
       file:
         path: "{{ app_directory }}"
         state: directory
-        owner: centos
-        group: centos
+        owner: ec2-user
+        group: ec2-user
         mode: '0755'
 
     - name: Clone the application code
@@ -23,13 +23,13 @@
         version: main
         force: yes  # Ensures the repository is updated
       become: yes
-      become_user: centos  # Ensures the operation runs as centos user
+      become_user: ec2-user  # Ensures the operation runs as ec2-user
 
     - name: Install Node.js if not installed
       yum:
         name: nodejs
         state: present
-      become: yes
+        become: yes
 
     - name: Install app dependencies
       npm:
@@ -46,6 +46,4 @@
         chdir: "{{ app_directory }}"
         background: yes
         creates: "{{ app_directory }}/node_modules"  # This prevents rerunning if node_modules already exist
-
-
 ...
