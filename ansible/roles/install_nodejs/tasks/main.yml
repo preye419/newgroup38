@@ -1,12 +1,23 @@
 ---
-- name: Add Node.js 16 repository
-  shell: curl -sL https://rpm.nodesource.com/setup_16.x | bash -
-  args:
-    creates: /etc/yum.repos.d/nodesource-nodejs16.repo
+- name: Add Node.js 18.x repo from NodeSource
+  get_url:
+    url: https://rpm.nodesource.com/setup_18.x
+    dest: /tmp/nodesource_setup.sh
+    mode: '0755'
+
+- name: Run NodeSource setup script
+  command: bash /tmp/nodesource_setup.sh
 
 - name: Install Node.js
   yum:
     name: nodejs
     state: present
-    enablerepo: nodesource
+
+- name: Verify Node.js installation
+  command: node -v
+  register: node_version
+
+- name: Show Node.js version
+  debug:
+    msg: "Node.js version installed: {{ node_version.stdout }}"
 ...

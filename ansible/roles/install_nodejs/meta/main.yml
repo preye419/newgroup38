@@ -1,2 +1,5 @@
 # meta/main.yml
-dependencies: []
+---
+dependencies:
+  - { role: configure_nginx }
+...

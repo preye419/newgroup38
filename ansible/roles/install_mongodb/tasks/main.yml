@@ -1,14 +1,16 @@
+
 ---
-- name: Setup MongoDB 4.4 on app1
+- name: Install and configure MongoDB on app1
   hosts: app1
   become: true
   tasks:
-    - name: Install openssl10-libs
+
+    - name: Install openssl10-libs (fixes MongoDB dependency issues)
       yum:
         name: openssl10-libs
         state: present
 
-    - name: Add MongoDB 4.4 repository
+    - name: Add MongoDB 4.4 repo
       copy:
         dest: /etc/yum.repos.d/mongodb-org-4.4.repo
         content: |
@@ -19,13 +21,14 @@
           enabled=1
           gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 
-    - name: Install MongoDB 4.4
+    - name: Install MongoDB
       yum:
         name: mongodb-org
         state: present
 
-    - name: Start MongoDB service
+    - name: Enable and start MongoDB
       systemd:
         name: mongod
         state: started
-        enabled: yes
+        enabled: true
+...
