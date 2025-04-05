@@ -4,30 +4,27 @@
   hosts: app1
   become: true
   tasks:
-  
-    # Ensure OpenSSL and OpenSSL 10 libraries are installed
-    - name: Install openssl and openssl10-libs (fixes MongoDB dependency issues)
+
+    # Install OpenSSL 1.0.x for MongoDB dependencies
+    - name: Install OpenSSL 1.0.x
       yum:
-        name:
-          - openssl
-          - openssl-devel
-          - openssl10-libs
+        name: https://dl.fedoraproject.org/pub/epel/7/x86_64/openssl10-1.0.2k-21.el7_5.1.x86_64.rpm
         state: present
-    
-    # Add MongoDB 4.4 repo
-    - name: Add MongoDB 4.4 repo
+
+    # Add MongoDB 4.2 repo (fallback to MongoDB 4.2 if 5.0 doesn't work)
+    - name: Add MongoDB 4.2 repo
       copy:
-        dest: /etc/yum.repos.d/mongodb-org-4.4.repo
+        dest: /etc/yum.repos.d/mongodb-org-4.2.repo
         content: |
-          [mongodb-org-4.4]
+          [mongodb-org-4.2]
           name=MongoDB Repository
-          baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/4.4/x86_64/
+          baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/4.2/x86_64/
           gpgcheck=1
           enabled=1
-          gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
+          gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
 
     # Install MongoDB
-    - name: Install MongoDB
+    - name: Install MongoDB 4.2
       yum:
         name: mongodb-org
         state: present
