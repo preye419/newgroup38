@@ -12,8 +12,8 @@
       file:
         path: "{{ app_directory }}"
         state: directory
-        owner: centos  # Changed to centos
-        group: centos # Changed to centos
+        owner: centos  # Ensure owner is centos
+        group: centos  # Ensure group is centos
         mode: '0755'
 
     - name: Clone the application code
@@ -23,7 +23,7 @@
         version: main
         force: yes  # Ensures the repository is updated
       become: yes
-      become_user: centos  # Changed to centos
+      become_user: centos  # Ensure operation runs as centos user
 
     - name: Install Node.js if not installed
       yum:
@@ -45,6 +45,6 @@
       args:
         chdir: "{{ app_directory }}"
         background: yes
-        creates: "{{ app_directory }}/node_modules"  # This prevents rerunning if node_modules already exist
+        creates: "{{ app_directory }}/node_modules"  # Prevents rerunning if node_modules already exist
 
 ...
