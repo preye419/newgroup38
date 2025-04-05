@@ -8,6 +8,14 @@
     app_port: 3000  # Port on which the Node.js app will run
 
   tasks:
+    - name: Ensure the app directory exists
+      file:
+        path: "{{ app_directory }}"
+        state: directory
+        owner: centos
+        group: centos
+        mode: '0755'
+
     - name: Clone the application code
       git:
         repo: "{{ repo_url }}"
@@ -38,5 +46,6 @@
         chdir: "{{ app_directory }}"
         background: yes
         creates: "{{ app_directory }}/node_modules"  # This prevents rerunning if node_modules already exist
+
 
 ...
