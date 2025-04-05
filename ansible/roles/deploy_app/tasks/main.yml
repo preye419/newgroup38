@@ -1,30 +1,42 @@
 ---
-- name: Clone the application code
-  git:
-    repo: "{{ repo_url }}"
-    dest: "{{ app_directory }}"
-    version: main
-    force: yes  # Ensures the repository is updated
+- name: Deploy Node.js App
+  hosts: app1
+  become: yes
+  vars:
+    app_directory: /home/centos/devops-api  # Directory where the app will be deployed
+    repo_url: https://github.com/preye419/newgroup38.git  # GitHub repository URL
+    app_port: 3000  # Port on which the Node.js app will run
 
-- name: Install Node.js if not installed
-  yum:
-    name: nodejs
-    state: present
-    become: yes
+  tasks:
+    - name: Clone the application code
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ app_directory }}"
+        version: main
+        force: yes  # Ensures the repository is updated
+      become: yes
+      become_user: centos  # Ensures the operation runs as centos user
 
-- name: Install app dependencies
-  npm:
-    path: "{{ app_directory }}"
-    state: present
-    production: yes
-    executable: /usr/bin/npm  # Optional: Specify the path to npm if not in the default location
+    - name: Install Node.js if not installed
+      yum:
+        name: nodejs
+        state: present
+      become: yes
 
-- name: Ensure the app is running
-  shell: |
-    cd {{ app_directory }}
-    nohup npm start &
-  args:
-    chdir: "{{ app_directory }}"
-    background: yes
-    creates: "{{ app_directory }}/node_modules"  # This prevents rerunning if node_modules already exist
+    - name: Install app dependencies
+      npm:
+        path: "{{ app_directory }}"
+        state: present
+        production: yes
+        executable: /usr/bin/npm  # Optional: Specify the path to npm if not in the default location
+
+    - name: Ensure the app is running
+      shell: |
+        cd {{ app_directory }}
+        nohup npm start &
+      args:
+        chdir: "{{ app_directory }}"
+        background: yes
+        creates: "{{ app_directory }}/node_modules"  # This prevents rerunning if node_modules already exist
+
 ...
