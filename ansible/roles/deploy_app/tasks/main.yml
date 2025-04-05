@@ -1,11 +1,12 @@
 ---
+---
 - name: Deploy Node.js App with Nginx Reverse Proxy
   hosts: app1
   become: yes
   vars:
-    app_directory: /home/centos/devops-api  # Directory where the app will be deployed
-    repo_url: https://github.com/preye419/newgroup38.git  # GitHub repository URL
-    app_port: 3000  # Port on which the Node.js app will run
+    app_directory: /home/centos/devops-api
+    repo_url: https://github.com/preye419/newgroup38.git
+    app_port: 3000
 
   tasks:
     - name: Create app directory
