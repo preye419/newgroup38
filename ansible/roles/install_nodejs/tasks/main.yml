@@ -1,24 +1,29 @@
 ---
-- name: Add Node.js 12.x repo from NodeSource
-  get_url:
-    url: https://rpm.nodesource.com/setup_12.x
-    dest: /tmp/nodesource_setup.sh
-    mode: '0755'
+- name: Install Node.js (version 16.x)
+  hosts: app1
+  become: yes
 
-- name: Run NodeSource setup script
-  command: bash /tmp/nodesource_setup.sh
+  tasks:
+    - name: Add Node.js 16.x repo from NodeSource
+      get_url:
+        url: https://rpm.nodesource.com/setup_16.x
+        dest: /tmp/nodesource_setup.sh
+        mode: '0755'
 
-- name: Install Node.js
-  yum:
-    name: nodejs
-    state: present
+    - name: Run NodeSource setup script
+      command: bash /tmp/nodesource_setup.sh
 
-- name: Verify Node.js installation
-  command: node -v
-  register: node_version
+    - name: Install Node.js
+      yum:
+        name: nodejs
+        state: present
 
-- name: Show Node.js version
-  debug:
-    msg: "Node.js version installed: {{ node_version.stdout }}"
+    - name: Verify Node.js installation
+      command: node -v
+      register: node_version
+
+    - name: Show Node.js version
+      debug:
+        msg: "Node.js version installed: {{ node_version.stdout }}"
 
 ...
