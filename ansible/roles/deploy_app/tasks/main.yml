@@ -1,6 +1,5 @@
 ---
----
-- name: Deploy Node.js App with Nginx Reverse Proxy
+- name: Deploy Node.js app
   hosts: app1
   become: yes
   vars:
@@ -24,8 +23,7 @@
         version: main
         force: yes  # Ensures the repository is updated
       become: yes
-      become_user: centos  # Ensure operation runs as centos user
-
+      
     - name: Install Node.js if not installed
       yum:
         name: nodejs
