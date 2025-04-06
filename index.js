@@ -14,7 +14,7 @@ app.get('/', async (req, res) => {
 
 try {
   console.log("About to bind the server...");
-  app.listen(3000, '0.0.0.0', () => console.log('App successfully running on port 3000'));
+  app.listen(4000, '0.0.0.0', () => console.log('App running on port 4000'));
 } catch (error) {
   console.error("Failed to bind to port:", error.message);
 }
