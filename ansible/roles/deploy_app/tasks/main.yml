@@ -1,5 +1,4 @@
 ---
----
 - name: Deploy Node.js App with Nginx Reverse Proxy
   hosts: app1
   become: yes
@@ -9,12 +8,17 @@
     app_port: 3000
 
   tasks:
+    - name: Install Git
+      yum:
+        name: git
+        state: present
+
     - name: Create app directory
       file:
         path: "{{ app_directory }}"
         state: directory
-        owner: centos  # Ensure owner is centos
-        group: centos  # Ensure group is centos
+        owner: centos
+        group: centos
         mode: '0755'
 
     - name: Clone the application code
@@ -22,8 +26,8 @@
         repo: "{{ repo_url }}"
         dest: "{{ app_directory }}"
         version: main
-        force: yes  # Ensures the repository is updated
-      become_user: centos  # Ensure operation runs as centos user
+        force: yes
+      become_user: centos
 
     - name: Install Node.js if not installed
       yum:
@@ -35,7 +39,7 @@
         path: "{{ app_directory }}"
         state: present
         production: yes
-        executable: /usr/bin/npm  # Optional: Specify the path to npm if not in the default location
+        executable: /usr/bin/npm
 
     - name: Ensure the app is running
       shell: |
@@ -44,7 +48,5 @@
       args:
         chdir: "{{ app_directory }}"
         background: yes
-        creates: "{{ app_directory }}/node_modules"  # Prevents rerunning if node_modules already exist
-
-
+        creates: "{{ app_directory }}/node_modules"
 ...
