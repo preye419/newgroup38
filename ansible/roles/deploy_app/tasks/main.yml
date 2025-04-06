@@ -7,9 +7,23 @@
     repo_url: https://github.com/preye419/newgroup38.git
 
   tasks:
-    - name: Install Git
+    - name: Install required dependencies
       yum:
-        name: git
+        name:
+          - git
+          - epel-release
+          - nodejs
+          - npm
+        state: present
+
+    - name: Add Node.js repository
+      shell: curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+      args:
+        warn: false
+
+    - name: Install Node.js
+      yum:
+        name: nodejs
         state: present
 
     - name: Install Nginx repository
@@ -22,7 +36,7 @@
         name: nginx
         state: present
 
-    - name: Start Nginx
+    - name: Start and enable Nginx
       service:
         name: nginx
         state: started
@@ -43,10 +57,12 @@
         version: main
         force: yes
 
-    - name: Install Node.js if not installed
-      yum:
-        name: nodejs
-        state: present
+    - name: Set permissions on app directory
+      file:
+        path: "{{ app_directory }}"
+        owner: centos
+        group: centos
+        recurse: yes
 
     - name: Install app dependencies
       npm:
@@ -55,31 +71,44 @@
         production: yes
         executable: /usr/bin/npm
 
-    - name: Ensure the app is running
+    - name: Start the Node.js application
       shell: |
         cd {{ app_directory }}
-        npm start
+        npm start &
       args:
         chdir: "{{ app_directory }}"
       async: 30
       poll: 0
 
-    - name: Configure Nginx
+    - name: Configure Nginx as a reverse proxy
       template:
         src: nginx.conf.j2
         dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: '0644'
       notify:
         - Restart Nginx
 
-    - name: Reload Nginx to apply changes
-      service:
-        name: nginx
-        state: reloaded
+    - name: Open HTTP and HTTPS ports in the firewall
+      firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+      with_items:
+        - 80/tcp
+        - 443/tcp
+      notify:
+        - Reload Firewalld
 
   handlers:
-  - name: Restart Nginx
-    service:
-    name: nginx
-    state: restarted
-    become: yes
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
+
+    - name: Reload Firewalld
+      service:
+        name: firewalld
+        state: reloaded
 ...
