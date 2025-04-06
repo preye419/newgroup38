@@ -59,4 +59,16 @@
     chdir: "{{ app_directory }}"
   async: 30
   poll: 0
+
+- name: Copy custom Nginx configuration file
+  template:
+    src: nginx.conf.j2  
+    dest: /etc/nginx/nginx.conf
+  become: yes
+
+- name: Reload Nginx to apply changes
+  service:
+    name: nginx
+    state: reloaded
+  become: yes
 ...
