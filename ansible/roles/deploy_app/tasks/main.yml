@@ -2,9 +2,10 @@
 - name: Deploy Node.js App with Nginx
   hosts: app1
   become: yes
+
   vars:
     app_directory: /var/www/myapp
-    repo_url: https://github.com/your/repo.git
+    repo_url: https://github.com/preye419/newgroup38.git
 
   tasks:
     - name: Install Git
