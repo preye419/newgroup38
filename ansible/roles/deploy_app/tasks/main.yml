@@ -35,9 +35,10 @@
 - name: Ensure the app is running
   shell: |
     cd {{ app_directory }}
-    nohup npm start &
+    npm start
   args:
     chdir: "{{ app_directory }}"
-    background: yes
-    creates: "{{ app_directory }}/node_modules"
+  async: 30
+  poll: 0
+
 ...
