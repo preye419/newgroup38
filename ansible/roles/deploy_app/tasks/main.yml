@@ -15,7 +15,7 @@
     name: nginx
     state: present
   become: yes
-  
+
 - name: Start Nginx
   service:
     name: nginx
@@ -71,4 +71,19 @@
     name: nginx
     state: reloaded
   become: yes
+
+- name: Configure Nginx
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify:
+    - Restart Nginx
+
+         # Handlers to restart Nginx
+  handlers:
+  - name: Restart Nginx
+    service:
+      name: nginx
+      state: restarted
+    become: yes
 ...
