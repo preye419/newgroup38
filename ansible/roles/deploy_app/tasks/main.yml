@@ -1,5 +1,6 @@
 ---
-- name: Deploy Node.js app
+---
+- name: Deploy Node.js App with Nginx Reverse Proxy
   hosts: app1
   become: yes
   vars:
@@ -22,13 +23,12 @@
         dest: "{{ app_directory }}"
         version: main
         force: yes  # Ensures the repository is updated
-      become: yes
-      
+      become_user: centos  # Ensure operation runs as centos user
+
     - name: Install Node.js if not installed
       yum:
         name: nodejs
         state: present
-        become: yes
 
     - name: Install app dependencies
       npm:
@@ -45,5 +45,6 @@
         chdir: "{{ app_directory }}"
         background: yes
         creates: "{{ app_directory }}/node_modules"  # Prevents rerunning if node_modules already exist
+
 
 ...
