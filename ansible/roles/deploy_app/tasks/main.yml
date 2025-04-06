@@ -4,6 +4,19 @@
     name: git
     state: present
 
+- name: Install Nginx
+  yum:
+    name: nginx
+    state: present
+  become: yes
+
+- name: Start Nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  become: yes
+
 - name: Create app directory
   file:
     path: "{{ app_directory }}"
@@ -40,5 +53,4 @@
     chdir: "{{ app_directory }}"
   async: 30
   poll: 0
-
 ...
