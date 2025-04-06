@@ -12,6 +12,9 @@ app.get('/', async (req, res) => {
   res.send(`<h1>I’m building pipelines like a pro!</h1><ul>${names}</ul>`);
 });
 
-console.log("Initializing app...");
-app.listen(3000, '0.0.0.0', () => console.log('App successfully running on port 3000'));
-console.log("Server setup completed.");
+try {
+  console.log("About to bind the server...");
+  app.listen(3000, '0.0.0.0', () => console.log('App successfully running on port 3000'));
+} catch (error) {
+  console.error("Failed to bind to port:", error.message);
+}
