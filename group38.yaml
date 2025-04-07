@@ -1,0 +1,20 @@
+support:
+  hosts:
+    support1:
+      ansible_host: 172.31.2.195
+      ansible_user: centos
+      ansible_ssh_private_key_file: /home/ubuntu/hibiscus.pem
+
+agent:
+  hosts:
+    jenkins-agent:
+      ansible_host: 172.31.9.209
+      ansible_user: centos
+      ansible_ssh_private_key_file: /home/ubuntu/hibiscus.pem
+
+app:
+  hosts:
+    app1:
+      ansible_host: 172.31.2.226
+      ansible_user: centos
+      ansible_ssh_private_key_file: /home/ubuntu/hibiscus.pem
