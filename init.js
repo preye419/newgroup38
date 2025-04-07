@@ -1,7 +1,6 @@
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/devops', { useNewUrlParser: true, useUnifiedTopology: true });
-
+mongoose.connect('mongodb://172.31.2.226/devops', { useNewUrlParser: true, useUnifiedTopology: true });
 const Dev = mongoose.model('Dev', { name: String });
 
 Dev.insertMany([{ name: 'Preye' }, { name: 'Stephanie' }, { name: 'Sheshe' }])
