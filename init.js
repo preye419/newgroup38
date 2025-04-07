@@ -4,7 +4,7 @@ mongoose.connect('mongodb://localhost/devops', { useNewUrlParser: true, useUnifi
 
 const Dev = mongoose.model('Dev', { name: String });
 
-Dev.insertMany([{ name: 'Team A' }, { name: 'Team B' }, { name: 'Team C' }])
+Dev.insertMany([{ name: 'Preye' }, { name: 'Stephanie' }, { name: 'Sheshe' }])
   .then(() => {
     console.log('Database seeded successfully');
     process.exit();
